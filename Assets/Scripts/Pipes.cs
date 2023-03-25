@@ -7,6 +7,7 @@ public class Pipes : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        // as soon as pipe is past the screen we set the leftEdge as that
         leftEdge = Camera.main.ScreenToWorldPoint(Vector3.zero).x - transform.lossyScale.x / 2;
     }
 

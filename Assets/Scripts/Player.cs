@@ -7,10 +7,11 @@ public class Player : MonoBehaviour {
     private Vector3 direction;
     public float gravity = -9.8f;
     public float strength = 5f;
-
+    public GameManager gameManager;
     private void Awake() {
         // this runs just once
         spriteRenderer = GetComponent<SpriteRenderer>();
+        gameManager = FindObjectOfType<GameManager>();
     }
 
     private void Start() {
@@ -18,6 +19,14 @@ public class Player : MonoBehaviour {
             Invokes the method methodName in time seconds, then repeatedly every repeatRate seconds.
         */
         InvokeRepeating(nameof(AnimateSprite), time: 0.15f, repeatRate: 0.15f);
+    }
+    private void OnEnable() {
+        var position = transform.position;
+        position.y = 0;
+        transform.position = position;
+
+        // resetting direction is like resetting the gravity
+        direction = Vector3.zero;
     }
     private void Update() {
         // space bar or left click
@@ -46,5 +55,13 @@ public class Player : MonoBehaviour {
             spriteIndex = 0;
         }
         spriteRenderer.sprite = sprites[spriteIndex];
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.tag == "Obstacle") {
+            gameManager.GameOver();
+        } else if (other.gameObject.tag == "Scoring") {
+            gameManager.IncreaseScore();
+        }
     }
 }
